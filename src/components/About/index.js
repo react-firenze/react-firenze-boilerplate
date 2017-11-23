@@ -5,7 +5,7 @@ class About extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      test: 'This component has its own state.'
+      test: 'This component has its own state.',
     };
   }
 

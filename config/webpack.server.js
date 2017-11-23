@@ -9,14 +9,22 @@ module.exports = (PATHS) => merge([
       path: PATHS.dist,
       filename: 'server.js',
       publicPath: '',
-      libraryTarget: 'umd'
+      libraryTarget: 'umd',
     },
-    externals:  /^[a-z\-0-9]+$/,
+    externals: [
+      (context, request, callback) => {
+        if (/^[a-z\-0-9]+$/.test(request) && !/glamor/.test(request)) {
+          return callback(null, `commonjs ${request}`);
+        }
+        return callback();
+      },
+    ],
     devtool: false,
     plugins: [],
   },
   parts.setEnvVariables({
     NODE_ENV: JSON.stringify('server'),
+    PORT: JSON.stringify(process.env.PORT),
     MY_ENV_VAR: JSON.stringify(process.env.MY_ENV_VAR),
   }),
   parts.clean(PATHS.dist),
@@ -25,12 +33,8 @@ module.exports = (PATHS) => merge([
   }),
   parts.transpileJavaScript({
     presets: [
-      ['env', {
-        'targets': {
-          'node': 'current'
-        }
-      }]
-    ]
+      ['env', { targets: { node: 'current' } }],
+    ],
   }),
   parts.loadImages({
     name: '[name].[ext]',

@@ -5,7 +5,7 @@ import store from './store/store';
 import About from './components/About';
 import Landing from './components/Landing';
 
-const App = () =>
+const App = () => (
   <Provider store={store}>
     <div>
       <Switch>
@@ -13,6 +13,7 @@ const App = () =>
         <Route path="/about" component={About} />
       </Switch>
     </div>
-  </Provider>;
+  </Provider>
+);
 
 export default App;

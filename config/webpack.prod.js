@@ -9,16 +9,17 @@ module.exports = (PATHS) => merge([
     output: {
       path: PATHS.public,
       filename: 'js/bundle.[hash:8].js',
-      publicPath: ''
+      publicPath: '',
     },
     plugins: [
       new webpack.optimize.ModuleConcatenationPlugin(),
-    ]
+    ],
   },
   parts.loadHtmlTemplate({
     filename: '../public/index.html',
     template: '../src/index.html',
     appId: 'app',
+    injectStyle: true,
   }),
   parts.setEnvVariables({
     NODE_ENV: JSON.stringify('production'),
@@ -33,17 +34,23 @@ module.exports = (PATHS) => merge([
         resource
         && resource.indexOf('node_modules') >= 0
         && resource.match(/\.js$/)
-      )
+      ),
+    },
+    {
+      name: 'common',
+      filename: 'js/common.js',
+      minChunks: ({ resource }) => (
+        resource
+        && resource.indexOf('react') >= 0
+        && resource.match(/\.js$/)
+      ),
     },
     {
       name: 'manifest',
       filename: 'js/manifest.js',
       minChunks: Infinity,
-    }
+    },
   ]),
-  parts.lintJavaScript({
-    include: PATHS.app,
-  }),
   parts.transpileJavaScript(),
   parts.loadImages({
     name: 'images/[name].[hash:8].[ext]',

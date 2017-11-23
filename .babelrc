@@ -14,14 +14,19 @@
     ]
   ],
   "plugins": [
-    "react-hot-loader/babel",
     "syntax-dynamic-import",
     "dynamic-import-webpack",
     "babel-plugin-transform-class-properties",
     "babel-plugin-transform-do-expressions",
-    ["styled-components", { "ssr": true }]
+    "babel-plugin-transform-async-to-generator",
+    "babel-plugin-transform-runtime",
+    "babel-plugin-transform-regenerator",
+    "babel-plugin-syntax-async-functions"
   ],
   "env": {
+    "development": {
+      "plugins": ["react-hot-loader/babel"]
+    },
     "test": {
       "plugins": ["transform-es2015-modules-commonjs"]
     },

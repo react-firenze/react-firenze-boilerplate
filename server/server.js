@@ -9,11 +9,11 @@ const ReactRouter = require('react-router-dom');
 const _ = require('lodash');
 const fs = require('fs');
 const compression = require('compression');
-const renderStatic= require('glamor/server').renderStatic;
-const App = require('../App').default;
+const renderStaticOptimized = require('glamor/server').renderStaticOptimized;
+const App = require('../src/App').default;
 
 const StaticRouter = ReactRouter.StaticRouter;
-const port = 8080;
+const port = process.env.PORT || 8080;
 const baseTemplate = fs.readFileSync('./public/index.html');
 const template = _.template(baseTemplate);
 
@@ -26,22 +26,19 @@ server.use('/images', express.static('./public/images'));
 
 server.use((req, res) => {
   const context = {};
-  const { html: body, css } = renderStatic(() =>
+  const { html: body, css, ids } = renderStaticOptimized(() =>
     ReactDOMServer.renderToString(
       React.createElement(
         StaticRouter,
         { location: req.url, context },
-        React.createElement(App)
-      )
-    )
-  )
+        React.createElement(App),
+      ),
+    ),
+  );
 
-  console.log('Styles:', css);
-  if (context.url) {
-    res.redirect(context.url);
-  }
+  if (context.url) res.redirect(context.url);
 
-  res.write(template({ body, css }));
+  res.write(template({ body, css, ids: JSON.stringify(ids) }));
   res.end();
 });
 
