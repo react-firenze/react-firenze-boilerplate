@@ -5,11 +5,10 @@ module.exports = (PATHS) => merge([
   {
     entry: PATHS.server,
     target: 'node',
+    devtool: false,
     output: {
       path: PATHS.dist,
       filename: 'server.js',
-      publicPath: '',
-      libraryTarget: 'umd',
     },
     externals: [
       (context, request, callback) => {
@@ -19,15 +18,12 @@ module.exports = (PATHS) => merge([
         return callback();
       },
     ],
-    devtool: false,
-    plugins: [],
   },
   parts.setEnvVariables({
     NODE_ENV: JSON.stringify('server'),
     PORT: JSON.stringify(process.env.PORT),
     MY_ENV_VAR: JSON.stringify(process.env.MY_ENV_VAR),
   }),
-  parts.clean(PATHS.dist),
   parts.lintJavaScript({
     include: PATHS.app,
   }),
@@ -37,8 +33,7 @@ module.exports = (PATHS) => merge([
     ],
   }),
   parts.loadImages({
-    name: '[name].[ext]',
-    output: '',
+    name: '[name].[hash:8].[ext]',
     publicPath: '/images/',
     emitFile: false,
   }),

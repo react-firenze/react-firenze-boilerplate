@@ -1,3 +1,4 @@
+const path = require('path');
 const merge = require('webpack-merge');
 const parts = require('./webpack.parts');
 const webpack = require('webpack');
@@ -7,17 +8,17 @@ module.exports = (PATHS) => merge([
     entry: PATHS.client,
     devtool: false,
     output: {
-      path: PATHS.public,
-      filename: 'js/bundle.[hash:8].js',
-      publicPath: '',
+      path: path.join(PATHS.public, '/js/'),
+      filename: 'bundle.[hash:8].js',
+      publicPath: '/js/',
     },
     plugins: [
       new webpack.optimize.ModuleConcatenationPlugin(),
     ],
   },
   parts.loadHtmlTemplate({
-    filename: '../public/index.html',
-    template: '../src/index.html',
+    filename: path.join(PATHS.public, '/index.html'),
+    template: path.join(PATHS.app, '/index.html'),
     appId: 'app',
     injectStyle: true,
   }),
@@ -28,8 +29,8 @@ module.exports = (PATHS) => merge([
   parts.clean(PATHS.public),
   parts.extractBundles([
     {
-      name: 'vendor',
-      filename: 'js/vendor.js',
+      name: 'commons',
+      filename: 'commons.js',
       minChunks: ({ resource }) => (
         resource
         && resource.indexOf('node_modules') >= 0
@@ -37,25 +38,16 @@ module.exports = (PATHS) => merge([
       ),
     },
     {
-      name: 'common',
-      filename: 'js/common.js',
-      minChunks: ({ resource }) => (
-        resource
-        && resource.indexOf('react') >= 0
-        && resource.match(/\.js$/)
-      ),
-    },
-    {
       name: 'manifest',
-      filename: 'js/manifest.js',
+      filename: 'manifest.js',
       minChunks: Infinity,
     },
   ]),
   parts.transpileJavaScript(),
   parts.loadImages({
-    name: 'images/[name].[hash:8].[ext]',
-    output: '/public/',
-    publicPath: '../',
+    name: '[name].[hash:8].[ext]',
+    outputPath: '../images/',
+    publicPath: '/images/',
   }),
   parts.minifyJavascript(),
 ]);

@@ -20,7 +20,7 @@ const template = _.template(baseTemplate);
 const server = express();
 
 server.use(compression());
-server.use('/public', express.static('./public'));
+// server.use('/public', express.static('./public'));
 server.use('/js', express.static('./public/js'));
 server.use('/images', express.static('./public/images'));
 

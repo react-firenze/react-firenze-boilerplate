@@ -1,2 +1,3 @@
-# react-firenze-boilerplate
-An opinionated boilerplate for React
+# React Firenze Boilerplate
+
+TBD

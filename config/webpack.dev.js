@@ -11,7 +11,7 @@ const PORT = 8080;
 
 module.exports = (PATHS) => merge([
   {
-    devtool: 'eval-source-map',
+    devtool: 'cheap-module-source-map',
     output: {
       path: path.join(__dirname, 'js'),
       filename: 'bundle.js',
@@ -26,8 +26,8 @@ module.exports = (PATHS) => merge([
   },
   parts.clean(PATHS.public),
   parts.loadHtmlTemplate({
-    filename: '../../public/index.html',
-    template: '../src/index.html',
+    filename: path.join(PATHS.public, '/index.html'),
+    template: path.join(PATHS.app, '/index.html'),
     appId: 'app',
     injectStyle: false,
   }),
@@ -40,18 +40,11 @@ module.exports = (PATHS) => merge([
     entry: PATHS.client,
   }),
   parts.devServer({
+    contentBase: PATHS.public,
+    publicPath: '/js/',
     host: 'localhost',
     port: PORT,
-    publicPath: '/js/',
-    contentBase: './public',
-  }),
-  parts.lintJavaScript({
-    include: PATHS.app,
   }),
   parts.transpileJavaScript(),
-  parts.inlineImages({
-    name: 'images/[name].[ext]',
-    output: '/public/',
-    publicPath: '../',
-  }),
+  parts.inlineImages(),
 ]);

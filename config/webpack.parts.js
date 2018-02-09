@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const BabiliPlugin = require('babili-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
@@ -12,24 +12,22 @@ exports.clean = (dest) => ({
     new CleanWebpackPlugin([dest], {
       root: path.join(__dirname, '..'),
       verbose: true,
-      dry: false,
     }),
   ],
 });
 
 exports.devServer = ({ host = 'localhost', port = PORT, publicPath, contentBase } = {}) => ({
   devServer: {
-    hot: true,
-    publicPath,
-    historyApiFallback: true,
     contentBase,
-    stats: 'errors-only',
+    historyApiFallback: true,
     host,
-    port,
     overlay: {
       errors: true,
       warnings: true,
     },
+    port,
+    publicPath,
+    stats: 'errors-only',
   },
 });
 
@@ -79,7 +77,7 @@ exports.lintJavaScript = ({ include, exclude = /node_modules/, options }) => ({
   module: {
     rules: [
       {
-        test: /\.jsx$/,
+        test: /\.jsx?$/,
         include,
         exclude,
         enforce: 'pre',
@@ -95,10 +93,10 @@ exports.loadHtmlTemplate = ({ filename, template, appId, injectStyle }) => ({
     new HtmlWebpackPlugin({
       filename,
       template,
-      alwaysWriteToDisk: true,
       body: `<div id="${appId}"><%= body %></div>`,
       style: injectStyle ? '<style><%= css %></style>' : '',
       rehydrate: injectStyle ? '<script>window._glam = <%= ids %>;</script>' : '',
+      alwaysWriteToDisk: true,
     }),
     new HtmlWebpackHarddiskPlugin(),
   ],
@@ -137,9 +135,19 @@ exports.loadImages = (options = {}, jpgQuality = '75', pngQuality = '75-90') => 
 
 exports.minifyJavascript = () => ({
   plugins: [
-    new BabiliPlugin({}, {
-      comments: false,
+    new UglifyJsPlugin({}, {
+      cache: true,
+      parallel: true,
+      extraComments: false,
       sourceMap: false,
+      uglifyOptions: {
+        ie8: false,
+        compress: {
+          conditionals: true,
+          dead_code: true,
+          evaluate: true,
+        },
+      },
     }),
   ],
 });

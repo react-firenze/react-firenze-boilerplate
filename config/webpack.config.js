@@ -29,8 +29,10 @@ const commonConfig = {
   },
   stats: {
     colors: true,
-    reasons: true,
-    chunks: true,
+    reasons: false,
+    chunks: false,
+    hash: false,
+    modules: false,
   },
   bail: true,
 };

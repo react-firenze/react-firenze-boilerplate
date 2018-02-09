@@ -6,7 +6,7 @@
       "env",
       {
         "targets": {
-          "browsers": "last 2 versions"
+          "browsers": "> 1%, last 2 versions"
         },
         "loose": true,
         "modules": false
@@ -15,20 +15,19 @@
   ],
   "plugins": [
     "syntax-dynamic-import",
-    "dynamic-import-webpack",
     "babel-plugin-transform-class-properties",
-    "babel-plugin-transform-do-expressions",
-    "babel-plugin-transform-async-to-generator",
-    "babel-plugin-transform-runtime",
-    "babel-plugin-transform-regenerator",
-    "babel-plugin-syntax-async-functions"
+    "babel-plugin-transform-runtime"
   ],
   "env": {
     "development": {
       "plugins": ["react-hot-loader/babel"]
     },
     "test": {
-      "plugins": ["transform-es2015-modules-commonjs"]
+      "presets": ["react", "stage-2"],
+      "plugins": [
+        "syntax-dynamic-import",
+        "transform-es2015-modules-commonjs"
+      ]
     },
     "server": {
       "plugins": ["transform-es2015-modules-commonjs"]
