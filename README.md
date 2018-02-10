@@ -1,8 +1,7 @@
 <p align="center">
   <img width="200" src="http://i63.tinypic.com/et7ji1.jpg" alt="redux-firenze-logo">
+  <h1 align="center">React Firenze Boilerplate (Core)</h1>
 </p>
-
-# React Firenze Boilerplate (Core)
 
 The first of a series of boilerplates that will allow full customization based on your needs. No more browsing to find the perfect boilerplate, what if you could simply generate a starter kit based on what you need and no unnecessary noise ?
 
