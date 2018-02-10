@@ -1,4 +1,6 @@
-<img src="https://avatars0.githubusercontent.com/u/34152980?s=200&v=4" alt="react firenze boilerplate logo" align="center">
+<p align="center">
+  <img width="200" src="http://i63.tinypic.com/et7ji1.jpg" alt="redux-firenze-logo">
+</p>
 
 # React Firenze Boilerplate (Core)
 
