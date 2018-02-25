@@ -4,3 +4,4 @@ dist/
 .gitignore
 .gitattributes
 .env
+package.json

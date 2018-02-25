@@ -1,7 +1,6 @@
 {
   "presets": [
     "react",
-    "stage-2",
     [
       "env",
       {
@@ -11,23 +10,17 @@
         "loose": true,
         "modules": false
       }
-    ]
+    ],
+    "stage-2"
   ],
-  "plugins": [
-    "syntax-dynamic-import",
-    "babel-plugin-transform-class-properties",
-    "babel-plugin-transform-runtime"
-  ],
+  "plugins": ["babel-plugin-transform-runtime"],
   "env": {
     "development": {
       "plugins": ["react-hot-loader/babel"]
     },
     "test": {
       "presets": ["react", "stage-2"],
-      "plugins": [
-        "syntax-dynamic-import",
-        "transform-es2015-modules-commonjs"
-      ]
+      "plugins": ["transform-es2015-modules-commonjs"]
     },
     "server": {
       "plugins": ["transform-es2015-modules-commonjs"]
