@@ -21,9 +21,9 @@ export function callAPIMiddleware({ dispatch, getState }) {
 
     if (!types) return next(action);
     if (
-      !Array.isArray(types) ||
-      types.length !== 3 ||
-      !types.every(type => typeof type === 'string')
+      !Array.isArray(types)
+      || types.length !== 3
+      || !types.every(type => typeof type === 'string')
     ) {
       throw new Error('Expected an array of three string types.');
     }
@@ -47,11 +47,7 @@ export function callAPIMiddleware({ dispatch, getState }) {
         }
 
         dispatch(
-          Object.assign({},
-            payload,
-            formattedData,
-            { type: successType },
-          ),
+          Object.assign({}, payload, formattedData, { type: successType }),
         );
       })
       .catch(error =>

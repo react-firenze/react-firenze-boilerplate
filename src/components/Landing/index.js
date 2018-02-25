@@ -14,12 +14,16 @@ const Landing = ({ actions, test }) => (
     <Title>This is the Duomo of Firenze!</Title>
     <img src={duomo} width="100" alt="florence duomo" />
     <Text>This text is styled with glamorous.</Text>
-    <Text>{`This boilerplate supports env vars => ${process.env.MY_ENV_VAR}`}</Text>
+    <Text>{`This boilerplate supports env vars => ${
+      process.env.MY_ENV_VAR
+    }`}</Text>
     <Text>{test}</Text>
     <Link to="/about">About</Link>
     <br />
     <br />
-    <Button onClick={() => actions.setTest('State has been updated!')}>Click me</Button>
+    <Button onClick={() => actions.setTest('State has been updated!')}>
+      Click me
+    </Button>
   </div>
 );
 

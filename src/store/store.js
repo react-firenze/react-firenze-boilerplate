@@ -6,7 +6,8 @@ const store = createStore(
   reducer,
   compose(
     applyMiddleware(callAPIMiddleware),
-    typeof window === 'object' && typeof window.devToolsExtension !== 'undefined'
+    typeof window === 'object'
+    && typeof window.devToolsExtension !== 'undefined'
       ? window.devToolsExtension()
       : f => f,
   ),

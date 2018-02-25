@@ -10,16 +10,14 @@ class About extends Component {
   }
 
   onButtonClick = () => {
-    this.setState({ test: 'And it\'s not styled withe styled components' });
+    this.setState({ test: "And it's not styled withe styled components" });
   };
 
   render() {
     return (
       <div>
         <h1>About</h1>
-        <p>
-          {this.state.test}
-        </p>
+        <p>{this.state.test}</p>
         <Link to="/">Home</Link>
         <br />
         <br />
