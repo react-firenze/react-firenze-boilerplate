@@ -7,18 +7,21 @@ import duomo from 'images/santa-maria-del-fiore.svg';
 import { setTest } from 'actions/actionCreators';
 
 import Button from '../Button';
-import { Title, Text } from './style';
+import { Text, Title } from './style';
 
 const Landing = ({ actions, test }) => (
   <div>
     <Title>This is the Duomo of Firenze!</Title>
-    <img src={duomo} width="100" alt="florence duomo" />
-    <Text>This text is styled with glamorous.</Text>
+    <img alt="florence duomo" src={duomo} width="100" />
+    <Text>This p is styled with glamorous.</Text>
     <Text>{`This boilerplate supports env vars => ${
       process.env.MY_ENV_VAR
     }`}</Text>
     <Text>{test}</Text>
-    <Link to="/about">About</Link>
+    <Link style={{ marginRight: '10px' }} to="/about">
+      About
+    </Link>
+    <Link to="/coin">Coin</Link>
     <br />
     <br />
     <Button onClick={() => actions.setTest('State has been updated!')}>
@@ -34,8 +37,8 @@ Landing.propTypes = {
   test: string.isRequired,
 };
 
-const mapStateToProps = state => ({ test: state.test });
-const mapDispatchToProps = dispatch => ({
+const mapStateToProps = (state) => ({ test: state.test });
+const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({ setTest }, dispatch),
 });
 

@@ -3,3 +3,5 @@
 /dist/*.*
 stats.json
 .env
+server/react-loadable.json
+/.vscode

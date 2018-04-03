@@ -1,19 +1,16 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
-import store from './store/store';
-import About from './components/About';
-import Landing from './components/Landing';
+import { renderRoutes } from 'react-router-config';
+import { array, shape } from 'prop-types';
 
-const App = () => (
-  <Provider store={store}>
-    <div>
-      <Switch>
-        <Route exact path="/" component={Landing} />
-        <Route path="/about" component={About} />
-      </Switch>
-    </div>
-  </Provider>
+const App = ({ route }) => (
+  <div>
+    <p>App</p>
+    <div>{renderRoutes(route.routes)}</div>
+  </div>
 );
+
+App.propTypes = {
+  route: shape({ routes: array }).isRequired,
+};
 
 export default App;

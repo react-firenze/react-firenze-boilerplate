@@ -3,13 +3,18 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>React Firenze Boilerplate</title>
+  <title><%= htmlWebpackPlugin.options.title %></title>
   <%= htmlWebpackPlugin.options.style %>
 </head>
 
 <body>
   <%= htmlWebpackPlugin.options.body %>
-  <%= htmlWebpackPlugin.options.rehydrate %>
+  <%= htmlWebpackPlugin.options.rehydrateCss %>
+  <%= htmlWebpackPlugin.options.initialState %>
+  <%= htmlWebpackPlugin.options.manifestChunk %>
+  <%= htmlWebpackPlugin.options.vendorsChunk %>
+  <%= htmlWebpackPlugin.options.bundles %>
+  <%= htmlWebpackPlugin.options.mainChunk %>
 </body>
 
 </html>
