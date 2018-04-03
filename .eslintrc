@@ -16,8 +16,16 @@
     "jest": true
   },
   "rules": {
+    "import/prefer-default-export": 0,
     "react/jsx-filename-extension": 0,
-    "operator-linebreak": [2, "before"],
+    "react/jsx-sort-props": 2,
+    "react/sort-comp": 2,
+    "arrow-parens": "off",
+    "react/sort-prop-types": [
+      true,
+      { "sortShapeProp": true, "ignoreCase": true }
+    ],
+    "operator-linebreak": [2, "before", { "overrides": { "=": "after" } }],
     "newline-per-chained-call": [2, { "ignoreChainWithDepth": 2 }],
     "arrow-body-style": [2, "as-needed"],
     "max-len": [
@@ -25,8 +33,8 @@
       {
         "code": 80,
         "ignoreUrls": true,
-        "ignoreTemplateLiterals": true,
-        "ignoreComments": true
+        "ignoreTemplateLiterals": false,
+        "ignoreComments": false
       }
     ]
   },

@@ -1,22 +1,29 @@
-import { applyMiddleware, createStore, compose } from 'redux';
-import { callAPIMiddleware } from 'utils/reduxUtils';
-import reducer from '../reducers';
+/* eslint no-underscore-dangle: 0 */
+import { applyMiddleware, compose, createStore } from 'redux';
+import slimAsync from 'redux-slim-async';
+import rootReducer from '../reducers';
+
+// Grab the state from a global variable injected into the server-generated HTML
+const preloadedState = window.__INITIAL_STATE__;
+// Allow the passed state to be garbage-collected
+delete window.__INITIAL_STATE__;
 
 const store = createStore(
-  reducer,
+  rootReducer,
+  preloadedState,
   compose(
-    applyMiddleware(callAPIMiddleware),
+    applyMiddleware(slimAsync),
     typeof window === 'object'
     && typeof window.devToolsExtension !== 'undefined'
       ? window.devToolsExtension()
-      : f => f,
+      : (f) => f,
   ),
 );
 
 if (module.hot) {
   module.hot.accept('../reducers', () => {
     // eslint-disable-next-line
-    const nextRootReducer = require('../reducers/index');
+    const nextRootReducer = require('../reducers/index.js');
     store.replaceReducer(nextRootReducer);
   });
 }

@@ -9,10 +9,11 @@ require('dotenv').config();
 const PATHS = {
   app: path.join(__dirname, '../src'),
   dist: path.join(__dirname, '../dist'),
-  client: path.join(__dirname, '../src/ClientApp.js'),
+  client: path.join(__dirname, '../src'),
   public: path.join(__dirname, '../public'),
-  server: path.join(__dirname, '../server/server.js'),
+  server: path.join(__dirname, '../server'),
 };
+const TITLE = 'React Firenze Boilerplate';
 
 const commonConfig = {
   context: __dirname,
@@ -39,10 +40,10 @@ const commonConfig = {
 
 module.exports = () => {
   if (process.env.NODE_ENV === 'production') {
-    return merge(commonConfig, prodConfig(PATHS));
+    return merge(commonConfig, prodConfig(PATHS, TITLE));
   } else if (process.env.NODE_ENV === 'server') {
     return merge(commonConfig, serverConfig(PATHS));
   }
 
-  return merge(commonConfig, devConfig(PATHS));
+  return merge(commonConfig, devConfig(PATHS, TITLE));
 };

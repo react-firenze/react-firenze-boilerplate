@@ -16,7 +16,12 @@ exports.clean = (dest) => ({
   ],
 });
 
-exports.devServer = ({ host = 'localhost', port = PORT, publicPath, contentBase } = {}) => ({
+exports.devServer = ({
+  host = 'localhost',
+  port = PORT,
+  publicPath,
+  contentBase,
+} = {}) => ({
   devServer: {
     contentBase,
     historyApiFallback: true,
@@ -32,19 +37,18 @@ exports.devServer = ({ host = 'localhost', port = PORT, publicPath, contentBase 
 });
 
 exports.extractBundles = (bundles) => ({
-  plugins: bundles.map(bundle => (
-    new webpack.optimize.CommonsChunkPlugin(bundle)
-  )),
+  plugins: bundles.map(
+    (bundle) => new webpack.optimize.CommonsChunkPlugin(bundle),
+  ),
 });
 
 exports.hotModuleRelaod = ({ host, port, entry }) => {
   const hmrEntry = [
-    'react-hot-loader/patch',
     `webpack-dev-server/client?http://${host}:${port}`,
     'webpack/hot/only-dev-server',
   ];
 
-  return ({
+  return {
     entry: Array.isArray(entry)
       ? [...hmrEntry, ...entry]
       : [...hmrEntry, entry],
@@ -52,7 +56,10 @@ exports.hotModuleRelaod = ({ host, port, entry }) => {
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NamedModulesPlugin(),
     ],
-  });
+    devServer: {
+      hot: true,
+    },
+  };
 };
 
 exports.inlineImages = ({ include, exclude, options } = {}) => ({
@@ -64,13 +71,25 @@ exports.inlineImages = ({ include, exclude, options } = {}) => ({
         exclude,
         use: {
           loader: 'url-loader',
-          options: Object.assign({}, {
-            limit: 150000,
-          }, options),
+          options: Object.assign(
+            {},
+            {
+              limit: 150000,
+            },
+            options,
+          ),
         },
       },
     ],
   },
+});
+
+exports.limitChunks = (maxChunks) => ({
+  plugins: [
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks,
+    }),
+  ],
 });
 
 exports.lintJavaScript = ({ include, exclude = /node_modules/, options }) => ({
@@ -88,67 +107,104 @@ exports.lintJavaScript = ({ include, exclude = /node_modules/, options }) => ({
   },
 });
 
-exports.loadHtmlTemplate = ({ filename, template, appId, injectStyle }) => ({
+function injectScriptTag(filename) {
+  return filename
+    ? `<script type="text/javascript" src="/js/${filename}.js"></script>`
+    : '';
+}
+
+exports.loadHtmlTemplate = ({
+  filename,
+  template,
+  appId,
+  title,
+  vendorsChunkFilename = null,
+  manifestChunkFilename = null,
+  mainChunkFilename = 'main',
+  injectState = false,
+  injectStyle = false,
+  injectChunkBundles = false,
+}) => ({
   plugins: [
     new HtmlWebpackPlugin({
+      alwaysWriteToDisk: true,
       filename,
       template,
+      inject: false,
       body: `<div id="${appId}"><%= body %></div>`,
+      bundles: injectChunkBundles ? '<%= bundles %>' : '',
+      manifestChunk: injectScriptTag(manifestChunkFilename),
+      mainChunk: injectScriptTag(mainChunkFilename),
+      vendorsChunk: injectScriptTag(vendorsChunkFilename),
+      rehydrateCss: injectStyle
+        ? '<script>window._glam = <%= ids %>;</script>'
+        : '',
       style: injectStyle ? '<style><%= css %></style>' : '',
-      rehydrate: injectStyle ? '<script>window._glam = <%= ids %>;</script>' : '',
-      alwaysWriteToDisk: true,
+      title,
+      initialState: injectState
+        ? '<script>window.__INITIAL_STATE__ = <%= initialState %>;</script>'
+        : '',
     }),
     new HtmlWebpackHarddiskPlugin(),
   ],
 });
 
-exports.loadImages = (options = {}, jpgQuality = '75', pngQuality = '75-90') => ({
+exports.loadImages = (
+  options = {},
+  jpgQuality = '75',
+  pngQuality = '75-90',
+) => ({
   module: {
-    rules: [{
-      test: /\.(png|jpg|gif|jpeg|svg)$/,
-      loaders: [
-        {
-          loader: 'file-loader',
-          options,
-        },
-        {
-          loader: 'image-webpack-loader',
-          query: {
-            mozjpeg: {
-              progressive: true,
-              quality: jpgQuality,
-            },
-            gifsicle: {
-              interlaced: false,
-            },
-            pngquant: {
-              optimizationLevel: 7,
-              quality: pngQuality,
-              speed: 4,
+    rules: [
+      {
+        test: /\.(png|jpg|gif|jpeg|svg)$/,
+        loaders: [
+          {
+            loader: 'file-loader',
+            options,
+          },
+          {
+            loader: 'image-webpack-loader',
+            query: {
+              mozjpeg: {
+                progressive: true,
+                quality: jpgQuality,
+              },
+              gifsicle: {
+                interlaced: false,
+              },
+              pngquant: {
+                optimizationLevel: 7,
+                quality: pngQuality,
+                speed: 4,
+              },
             },
           },
-        },
-      ],
-    }],
+        ],
+      },
+    ],
   },
 });
 
 exports.minifyJavascript = () => ({
   plugins: [
-    new UglifyJsPlugin({}, {
-      cache: true,
-      parallel: true,
-      extraComments: false,
-      sourceMap: false,
-      uglifyOptions: {
-        ie8: false,
-        compress: {
-          conditionals: true,
-          dead_code: true,
-          evaluate: true,
+    new UglifyJsPlugin(
+      {},
+      {
+        cache: true,
+        parallel: true,
+        extraComments: false,
+        sourceMap: false,
+        uglifyOptions: {
+          ie8: false,
+          compress: {
+            conditionals: true,
+            dead_code: true,
+            evaluate: true,
+          },
         },
       },
-    }),
+    ),
   ],
 });
 
@@ -162,15 +218,21 @@ exports.setEnvVariables = (vars = {}) => ({
 
 exports.transpileJavaScript = (options = {}) => ({
   module: {
-    rules: [{
-      test: /\.jsx?$/,
-      exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader',
-        options: Object.assign({}, {
-          cacheDirectory: true,
-        }, options),
+    rules: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: Object.assign(
+            {},
+            {
+              cacheDirectory: true,
+            },
+            options,
+          ),
+        },
       },
-    }],
+    ],
   },
 });
